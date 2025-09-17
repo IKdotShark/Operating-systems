@@ -1,10 +1,9 @@
 # !/bin/bash
 
 # Lab 1 ex.3: Using strace to monitor system calls for mkdir and touch commands, and saving the output to log files.
-# mkdir -p dir/subdir
-# mkdir dir2/
-# touch dir/subdir/file.txt
-# touch dir2/file2.txt
+# chmod 777 lab1.sh
+# ./lab1.sh
+
 strace -o mkdir_log.txt mkdir -p dir/subdir
 strace -o mkdir2_log.txt mkdir dir2
 strace -o touch_log.txt touch dir/subdir/file.txt
