@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>etcd Config Manager</title>
+    <style>
+        body { font-family: Arial; margin: 30px; }
+        input, textarea { width: 100%; margin: 5px 0; }
+        .row { border-bottom: 1px solid #ccc; padding: 8px; }
+        button { margin-right: 5px; }
+    </style>
+</head>
+<body>
+
+<h2>etcd Config Manager</h2>
+
+<h3>Add / Update</h3>
+<input id="key" placeholder="service/db_host">
+<textarea id="value" placeholder="value"></textarea>
+<button onclick="save()">Save</button>
+
+<h3>Keys</h3>
+<div id="keys"></div>
+
+<script>
+const API = "http://localhost:8000";
+
+async function load() {
+    const r = await fetch(API + "/keys");
+    const data = await r.json();
+    const div = document.getElementById("keys");
+    div.innerHTML = "";
+
+    for (const k in data) {
+        const row = document.createElement("div");
+        row.className = "row";
+        row.innerHTML = `
+            <b>${k}</b><br/>
+            <pre>${data[k]}</pre>
+            <button onclick="edit('${k}')">Edit</button>
+            <button onclick="del('${k}')">Delete</button>
+        `;
+        div.appendChild(row);
+    }
+}
+
+async function save() {
+    const key = document.getElementById("key").value;
+    const value = document.getElementById("value").value;
+
+    await fetch(API + "/keys", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ key, value })
+    });
+    load();
+}
+
+async function edit(k) {
+    const r = await fetch(API + "/keys/" + k);
+    const data = await r.json();
+    document.getElementById("key").value = data.key;
+    document.getElementById("value").value = data.value;
+}
+
+async function del(k) {
+    await fetch(API + "/keys/" + k, { method: "DELETE" });
+    load();
+}
+
+load();
+</script>
+
+</body>
+</html>
