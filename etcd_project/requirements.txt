@@ -1,3 +1,5 @@
 fastapi
 etcd3
 pydantic
+uvicorn
+jinja2
