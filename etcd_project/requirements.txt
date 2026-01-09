@@ -1,0 +1,3 @@
+fastapi
+etcd3
+pydantic
